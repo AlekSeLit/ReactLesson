@@ -1,44 +1,50 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
- const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-
-module.exports = {
-    mode: 'development',
+ const path = require('path');
+//  const HtmlWebpackPlugin = require('html-webpack-plugin');
+//  const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+ 
+ module.exports = {
+   mode: 'development',
+   entry: {
+     index: './index.jsx'
+   },
+   context: path.resolve(__dirname, 'src'),
+   devtool: 'inline-source-map',
     devServer: {
-        contentBase: path.resolve(__dirname, 'static', 'build'),
-        publicPath: path.resolve(__dirname, 'src'),
-        open: true,
-        compress: true,
-        hot: true,
-        port: 8080,
+        contentBase: './dist',
+        historyApiFallback: {
+          index: 'index.html'
+        },
     },
-    entry: {
-        app: './index.jsx'
-    },
-    context: path.resolve(__dirname, 'src'),
-    output: {
-        path: path.resolve(__dirname, 'static', 'build'),
-        filename: 'app.js',
-        publicPath: path.resolve(__dirname, 'static', 'build')
-    },
-    module: {
-        rules: [
-            {
+      module: {
+          rules: [
+              {
                 test: /\.jsx?$/,
                 include: path.resolve(__dirname, 'src'),
                 exclude: path.resolve(__dirname, 'node_modules'),
                 loader: 'babel-loader',
                 options: {
-                    presets: ['@babel/env', '@babel/react']
+                    presets: ['@babel/env', '@babel/react'],
+                    plugins: ['@babel/plugin-proposal-class-properties']
                 }
-            }
-        ]
-    },
-    plugins: [
-        new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
-        new HtmlWebpackPlugin({
-          template: 'index.html'
-        }),
-      ],
-};
+              },
+              {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+              }
+          ]
+      },
+  //  plugins: [
+  //    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
+  //    new HtmlWebpackPlugin({
+  //      template: 'index.html'
+  //    }),
+  //  ],
+  output: {
+    path: path.resolve(__dirname, 'static', 'build'),
+    filename: 'app.js',
+    publicPath: path.resolve(__dirname, 'static', 'build')
+},
+   resolve: {
+       extensions: ['.js', '.jsx']
+   }
+ };
